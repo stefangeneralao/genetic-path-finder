@@ -84,7 +84,7 @@ function Creature() {
     push();
     fill(this.colorCode);
     noStroke();
-    ellipse(this.position.x, this.position.y, this.velocity.mag() * 5);
+    ellipse(this.position.x, this.position.y, 50);
     pop();
   }
 
