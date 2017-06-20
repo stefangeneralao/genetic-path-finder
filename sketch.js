@@ -3,7 +3,7 @@ let populations;
 let obstacles;
 let tick = 0;
 const generationLifespan = 100;
-const darkTheme = false;
+let darkTheme = true;
 
 // P5.setup function.
 setup = () => {
@@ -66,17 +66,34 @@ createEnvironment = () => {
 createObstacles = () => {
   // Preset1: Obstacles at random position within canvas.
   preset1 = () => {
-    let tempObstaclesList = [];
-
+    const tempObstaclesList = [];
     for(let i = 0; i < 10; i++) {
       let newObstacle = new Obstacle();
       newObstacle.setPosition(
         random(width),
-        random(height * 0.2, height * 0.7));
+        random(height * 0.2, height * 0.7)
+      );
       newObstacle.setSize(width * 0.15);
+      newObstacle.setJitter(1.5);
       tempObstaclesList.push(newObstacle);
     }
+    return tempObstaclesList;
+  }
 
+  // Preset2: 10 obstacles in a horizontal line.
+  preset2 = () => {
+    const tempObstaclesList = [];
+    const nrOfObstacles = 10;
+    for(let i = 0; i < nrOfObstacles; i++) {
+      let newObstacle = new Obstacle();
+      newObstacle.setPosition(
+        (i + 0.5) * width / nrOfObstacles,
+        height * 0.5
+      );
+      newObstacle.setSize(width * 0.1);
+      newObstacle.setJitter(1);
+      tempObstaclesList.push(newObstacle);
+    }
     return tempObstaclesList;
   }
 
@@ -106,19 +123,15 @@ createPopulations = () => {
 
   // Population preset 2.
   populationsPreset2 = () => {
-    let population1 = new Population();
-    population1.setSpawnPoint(width * 0.4, height * 0.9);
-    // population1.setInitialVelocity(0, -5);
-    population1.setMutationRate(0.05);
-
-    let population2 = new Population();
-    population2.setSpawnPoint(width * 0.6, height * 0.9);
-    // population2.setInitialVelocity(0, -5);
-    population2.setMutationRate(0.05);
-
-    let newPopulations = [];
-    newPopulations.push(population1);
-    newPopulations.push(population2);
+    const newPopulations = [];
+    newPopulations.push(new Population());
+    newPopulations.push(new Population());
+    newPopulations[0].setSpawnPoint(width * 0.45, height * 0.9);
+    newPopulations[1].setSpawnPoint(width * 0.55, height * 0.9);
+    newPopulations[0].setMutationRate(0.01);
+    newPopulations[1].setMutationRate(0.01);
+    newPopulations[0].setMaxForce(1);
+    newPopulations[1].setMaxForce(1);
 
     return newPopulations;
   }
@@ -136,7 +149,9 @@ createPopulations = () => {
 }
 
 createTarget = () => {
-  target = new Target(width * 0.5, height * 0.1);
+  target = new Target();
+  target.setPosition(width * 0.5, height * -0.15);
+  target.setSize(500);
 }
 
 // Display all obstacles.
@@ -166,8 +181,15 @@ moveObstacles = () => {
     }
   }
 
+  // Preset: Let obstacle jitter.
+  jitterObstacles = () => {
+    obstacles.forEach((obstacle) => {
+      obstacle.move();
+    });
+  }
+
   // Preset selector.
-  stepRandom(1);
+  jitterObstacles();
 }
 
 movePopulation = () => {
