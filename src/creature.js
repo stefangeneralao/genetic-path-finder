@@ -5,12 +5,7 @@ function Creature() {
   this.size = 1;
   this.dna = new DNA();
   this.fitness = 0;
-  this.colorCode = color(
-    random(50, 205),
-    random(50, 205),
-    random(50, 205),
-    50
-  );
+  this.colorCode = getRandomColor();
   this.isAlive = true;
 
   this.show = () => {
@@ -97,12 +92,7 @@ function Creature() {
   }
 
   this.randomizeColor = () => {
-    return this.colorCode = color(
-      random(50, 205),
-      random(50, 205),
-      random(50, 205),
-      50
-    );
+    this.colorCode = getRandomColor();
   }
 }
 
