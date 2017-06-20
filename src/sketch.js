@@ -70,11 +70,12 @@ createObstacles = () => {
     for(let i = 0; i < 10; i++) {
       let newObstacle = new Obstacle();
       newObstacle.setPosition(
-        random(width),
+        random(width * 0.1, width * 0.9),
         random(height * 0.2, height * 0.7)
       );
       newObstacle.setSize(width * 0.15);
-      newObstacle.setJitter(1.5);
+      newObstacle.setJitter(2);
+      newObstacle.setBottomBorder(height * 0.8);
       tempObstaclesList.push(newObstacle);
     }
     return tempObstaclesList;
@@ -91,7 +92,7 @@ createObstacles = () => {
         height * 0.5
       );
       newObstacle.setSize(width * 0.1);
-      newObstacle.setJitter(1);
+      newObstacle.setJitter(1.5);
       tempObstaclesList.push(newObstacle);
     }
     return tempObstaclesList;
@@ -126,10 +127,10 @@ createPopulations = () => {
     const newPopulations = [];
     newPopulations.push(new Population());
     newPopulations.push(new Population());
-    newPopulations[0].setSpawnPoint(width * 0.45, height * 0.9);
-    newPopulations[1].setSpawnPoint(width * 0.55, height * 0.9);
-    newPopulations[0].setMutationRate(0.01);
-    newPopulations[1].setMutationRate(0.01);
+    newPopulations[0].setSpawnPoint(width * 0.45, height * 0.95);
+    newPopulations[1].setSpawnPoint(width * 0.55, height * 0.95);
+    newPopulations[0].setMutationRate(0.03);
+    newPopulations[1].setMutationRate(0.03);
     newPopulations[0].setMaxForce(1);
     newPopulations[1].setMaxForce(1);
 
@@ -150,8 +151,8 @@ createPopulations = () => {
 
 createTarget = () => {
   target = new Target();
-  target.setPosition(width * 0.5, height * -0.15);
-  target.setSize(500);
+  target.setPosition(width * 0.5, height * 0);
+  target.setSize(200);
 }
 
 // Display all obstacles.
