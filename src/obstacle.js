@@ -2,6 +2,7 @@ function Obstacle(xpos, ypos, size) {
   this.position = createVector(xpos, ypos);
   this.size = size ? size : 100;
   this.jitterRate = 1;
+  this.bottomBorder = 0;
 
   this.setPosition = (xpos, ypos) => {
     this.position.x = xpos;
@@ -53,5 +54,28 @@ function Obstacle(xpos, ypos, size) {
     const randomVector = p5.Vector.random2D();
     randomVector.mult(this.jitterRate);
     this.moveRelative(randomVector);
+
+    // Check bottom border.
+    if(!this.withinBottomBorder()) {
+      this.setPosition(this.position.x, this.bottomBorder);
+    }
+  }
+
+  this.setBottomBorder = (border) => {
+    this.bottomBorder = border;
+  }
+
+  this.getBottomBorder = () => {
+    return this.bottomBorder;
+  }
+
+  this.withinBottomBorder = () => {
+    const ypos = this.position.y;
+    const halfSize = this.size / 2;
+    if(ypos < this.bottomBorder) {
+      return true;
+    }else{
+      return false;
+    }
   }
 }
