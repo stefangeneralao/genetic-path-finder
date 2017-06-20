@@ -3,11 +3,12 @@ let populations;
 let obstacles;
 let tick = 0;
 const generationLifespan = 100;
+const darkTheme = false;
 
 // P5.setup function.
 setup = () => {
   createEnvironment();
-  // createObstacles("PRESET_1");
+  createObstacles("PRESET_1");
   createPopulations("PRESET_1");
   createTarget("PRESET_1");
 }
@@ -20,8 +21,9 @@ draw = () => {
     showObstacles();
     showPopulations();
     showTarget();
-    stepObstacles();
-    stepPopulation();
+    moveObstacles();
+    movePopulation();
+    evaluatePopulation();
     tick++;
 
   // Freeze canvas before fading to reset.
@@ -39,7 +41,6 @@ draw = () => {
   // Reset environment and create new generation.
   }else {
     console.log("Reset");
-    createNewGeneration();
     resetEnvironment();
     tick = 0;
   }
@@ -53,7 +54,11 @@ createEnvironment = () => {
   const fpsCap = 30;
   frameRate(fpsCap);
   createCanvas(windowWidth, windowHeight);
-  background(255);
+  if(darkTheme) {
+    background(20);
+  }else{
+    background(235);
+  }
   console.log("fpsCap = " + fpsCap);
 }
 
@@ -65,7 +70,10 @@ createObstacles = () => {
 
     for(let i = 0; i < 10; i++) {
       let newObstacle = new Obstacle();
-      newObstacle.setPosition(random(width), random(height));
+      newObstacle.setPosition(
+        random(width),
+        random(height * 0.2, height * 0.7));
+      newObstacle.setSize(width * 0.15);
       tempObstaclesList.push(newObstacle);
     }
 
@@ -80,9 +88,6 @@ createPopulations = () => {
   // Creature preset 1.
   creaturePreset1 = () => {
     let defaultCreature = new Creature();
-    defaultCreature.setMutationRate(100);
-    defaultCreature.setMaxThrottle(100);
-    defaultCreature.setMaxSpeed(100);
     return defaultCreature;
   }
 
@@ -102,10 +107,14 @@ createPopulations = () => {
   // Population preset 2.
   populationsPreset2 = () => {
     let population1 = new Population();
-    population1.setSpawnPoint(width * 0.1, height * 0.9);
+    population1.setSpawnPoint(width * 0.4, height * 0.9);
+    // population1.setInitialVelocity(0, -5);
+    population1.setMutationRate(0.05);
 
     let population2 = new Population();
-    population2.setSpawnPoint(width * 0.9, height * 0.9);
+    population2.setSpawnPoint(width * 0.6, height * 0.9);
+    // population2.setInitialVelocity(0, -5);
+    population2.setMutationRate(0.05);
 
     let newPopulations = [];
     newPopulations.push(population1);
@@ -116,9 +125,10 @@ createPopulations = () => {
 
   // Wrap up and return presets.
   let newPopulations = populationsPreset2();
+  let defaultCreature = creaturePreset1;
   for(let i in newPopulations){
     for(let j = 0; j < 100; j++) {
-      newPopulations[i].insertCreature(creaturePreset1());
+      newPopulations[i].insertCreature(defaultCreature());
     }
   }
 
@@ -146,7 +156,7 @@ showTarget = () => {
   target.show();
 }
 
-stepObstacles = () => {
+moveObstacles = () => {
   // Preset: Step in random direction.
   stepRandom = (stepSize) => {
     for(let i in obstacles) {
@@ -157,25 +167,10 @@ stepObstacles = () => {
   }
 
   // Preset selector.
-  stepRandom(2);
+  stepRandom(1);
 }
 
-stepPopulation = () => {
-  // Preset: Step in random direction.
-  stepRandom = (stepSize) => {
-    for(let i in populations) {
-      populations[i].stepRandom(stepSize);
-    }
-  }
-
-  // Preset: Apply force in random direction.
-  applyRandomForce = (force) => {
-    for(let i in populations) {
-      populations[i].applyRandomForce(force);
-      populations[i].move();
-    }
-  }
-
+movePopulation = () => {
   // Preset: Move according to dna.
   moveAccordingToDNA = () => {
     for(let i in populations) {
@@ -185,22 +180,43 @@ stepPopulation = () => {
 
   // Preset selector.
   moveAccordingToDNA(tick);
-  // applyRandomForce(2);
 }
 
 fadeEnvironment = () => {
   push();
-  fill(255, 20);
+  if(darkTheme) {
+    fill(0, 20);
+  }else{
+    fill(255, 20);
+  }
   noStroke();
   rect(0, 0, width, height);
   pop();
 }
 
 createNewGeneration = () => {
-  for(let i in populations) {
-    populations[i].createNewGeneration();
-  }
+  populations.forEach((population) => {
+    population.createNewGeneration();
+  });
+}
+
+setAllCreaturesToSpawnPoint = () => {
+  populations.forEach((population) => {
+    population.setAllCreaturesToSpawnPoint();
+  });
+}
+
+resetEnvironment = () => {
+  createNewGeneration();
+  setAllCreaturesToSpawnPoint();
+}
+
+evaluatePopulation = () => {
+  populations.forEach((population) => {
+    population.checkObstacleCrash(obstacles);
+    population.giveFitness();
+  });
+
 }
 
 freezeEnvironment = () => {}
-resetEnvironment = () => {}

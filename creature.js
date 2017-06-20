@@ -1,57 +1,40 @@
 function Creature() {
   // Constructor.
-  this.spawnPoint = createVector();
   this.position = createVector(width * 0.5, height * 0.5);
   this.velocity = createVector();
-  this.size = 2;
+  this.size = 1;
   this.dna = new DNA();
-
-  // Functions.
-  this.randomizeDNA = () => {}
-  this.setMutationRate = (mutationRate) => {}
-  this.setMaxThrottle = (maxThrottle) => {}
-  this.setMaxSpeed = (maxSpeed) => {}
+  this.fitness = 0;
+  this.colorCode = color(255, 0, 0, 30);
+  this.isAlive = true;
 
   this.show = () => {
     push();
     noStroke();
-    fill(255, 0, 0);
-    ellipse(this.position.x, this.position.y, this.size);
+    fill(this.colorCode);
+    translate(this.position.x, this.position.y);
+    rotate(this.velocity.heading());
+    ellipse(0, 0, this.velocity.mag() * 2, this.size);
     pop();
-  }
-
-  this.moveRelative = (vector) => {
-    this.position.x += vector.x;
-    this.position.y += vector.y;
   }
 
   this.setSize = (size) => {
     this.size = size;
   }
 
-  this.setSpawnPoint = (xpos, ypos) => {
-    this.spawnPoint.x = xpos;
-    this.spawnPoint.y = ypos;
-    this.position = this.spawnPoint.copy();
-  }
-
   this.applyForce = (forceVector) => {
     this.velocity.add(forceVector);
-  }
-
-  this.move = () => {
-    this.position.x += this.velocity.x;
-    this.position.y += this.velocity.y;
   }
 
   this.moveAccordingToDNA = (index) => {
     let dnaInstruction = this.dna.getInstructionAtIndex(index);
     this.applyForce(dnaInstruction);
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
   }
 
   this.copy = () => {
     let copiedCreature = new Creature();
-    copiedCreature.setSpawnPoint(this.spawnPoint.x, this.spawnPoint.y);
     copiedCreature.size = this.size;
     copiedCreature.dna = this.dna.copy();
 
@@ -63,9 +46,39 @@ function Creature() {
   }
 
   this.getDistanceToTarget = () => {
-    return dist(
-      this.position.x, this.position.y,
-      target.position.x, target.position.y
-    );
+    return target.getDistance(this.position.x, this.position.y);
+  }
+
+  this.setPosition = (xpos, ypos) => {
+    this.position.x = xpos;
+    this.position.y = ypos;
+  }
+
+  this.setVelocity = (xvel, yvel) => {
+    this.velocity.x = xvel;
+    this.velocity.y = yvel;
+  }
+
+  this.freeze = () => {
+    this.velocity = createVector();
+  }
+
+  this.resetFitness = () => {
+    this.fitness = 0;
+  }
+
+  this.kill = () => {
+    this.freeze();
+    this.resetFitness();
+    this.isAlive = false;
+    this.flash();
+  }
+
+  this.flash = () => {
+    push();
+    fill(this.colorCode);
+    noStroke();
+    ellipse(this.position.x, this.position.y, 25);
+    pop();
   }
 }

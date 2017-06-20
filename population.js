@@ -1,10 +1,12 @@
 function Population() {
   this.spawnPoint = createVector();
+  this.initialVelocity = createVector();
   this.creatures = [];
+  this.mutationRate = 0.001;
 
   this.insertCreature = (creature) => {
-    creature.setSpawnPoint(this.spawnPoint.x, this.spawnPoint.y);
-    console.log(creature.spawnPoint);
+    creature.setPosition(this.spawnPoint.x, this.spawnPoint.y);
+    creature.setVelocity(this.initialVelocity.x, this.initialVelocity.y);
     this.creatures.push(creature);
   }
 
@@ -14,54 +16,85 @@ function Population() {
     }
   }
 
-  this.stepRandom = (stepSize) => {
-    for(let i in this.creatures) {
-      let randomVector = p5.Vector.random2D();
-      randomVector.mult(stepSize);
-      this.creatures[i].moveRelative(randomVector);
-    }
-  }
-
   this.setSpawnPoint = (xpos, ypos) => {
     this.spawnPoint.x = xpos;
     this.spawnPoint.y = ypos;
   }
 
-  this.applyRandomForce = (forceVector) => {
-    for(let i in this.creatures) {
-      let randomVector = p5.Vector.random2D();
-      randomVector.mult(forceVector);
-      this.creatures[i].applyForce(randomVector);
-    }
+  this.setInitialVelocity = (xvel, yvel) => {
+    this.initialVelocity.x = xvel;
+    this.initialVelocity.y = yvel;
   }
 
-  this.move = () => {
-    for(let i in this.creatures) {
-      this.creatures[i].move();
-    }
-  }
-
+  // Creature is not moved if creature has hit the target.
   this.moveAccordingToDNA = (tick) => {
-    for(let i in this.creatures) {
-      this.creatures[i].moveAccordingToDNA(tick);
-      this.creatures[i].move();
-    }
+    this.creatures.forEach((creature) => {
+      if(creature.isAlive){
+        const distanceToTarget = creature.getDistanceToTarget();
+        if(distanceToTarget == 0){
+          creature.freeze();
+        }else{
+          creature.moveAccordingToDNA(tick);
+        }
+      }
+    });
+  }
+
+  this.giveFitness = () => {
+    this.creatures.forEach((creature) => {
+      if(creature.isAlive){
+        const distanceToTarget = creature.getDistanceToTarget();
+        if(distanceToTarget == 0) {
+          creature.fitness += 1;
+        }else{
+          const calculatedFitness = map(distanceToTarget, 0, height, 1, 0);
+          creature.fitness += calculatedFitness;
+        }
+      }
+    });
   }
 
   this.createNewGeneration = () => {
     // Find best creature.
     let bestCreature = this.creatures[0];
-    for(let i in this.creatures) {
-      let creatureDistanceToTarget = this.creatures[i].getDistanceToTarget();
-      let bestCreatureDistanceToTarget = bestCreature.getDistanceToTarget();
-      if(creatureDistanceToTarget < bestCreatureDistanceToTarget) {
-        bestCreature = this.creatures[i];
+    this.creatures.forEach((creature) => {
+      const creatureFitness = creature.fitness;
+      const bestCreatureFitness = bestCreature.fitness;
+      if(creatureFitness > bestCreatureFitness) {
+        bestCreature = creature;
       }
-    }
+    });
 
+    console.log(bestCreature.fitness);
+
+    // Copy the best creature and mutate.
     for(let i in this.creatures) {
       this.creatures[i] = bestCreature.copy();
-      this.creatures[i].mutateDNA(0.0005);
+      this.creatures[i].mutateDNA(this.mutationRate);
     }
+  }
+
+  this.setMutationRate = (mutationRate) => {
+    this.mutationRate = mutationRate;
+  }
+
+  this.setAllCreaturesToSpawnPoint = () => {
+    this.creatures.forEach((creature) => {
+      creature.setPosition(this.spawnPoint.x, this.spawnPoint.y);
+      creature.setVelocity(this.initialVelocity.x, this.initialVelocity.y);
+    });
+  }
+
+  this.checkObstacleCrash = (obstacles) => {
+    this.creatures.forEach((creature) => {
+      obstacles.forEach((obstacle) => {
+        if(creature.isAlive){
+          const creatureCrashed = obstacle.checkCrash(creature);
+          if(creatureCrashed) {
+            creature.kill();
+          }
+        }
+      });
+    });
   }
 }
