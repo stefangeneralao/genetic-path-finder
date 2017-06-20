@@ -5,7 +5,12 @@ function Creature() {
   this.size = 1;
   this.dna = new DNA();
   this.fitness = 0;
-  this.colorCode = color(255, 0, 0, 30);
+  this.colorCode = color(
+    random(50, 205),
+    random(50, 205),
+    random(50, 205),
+    50
+  );
   this.isAlive = true;
 
   this.show = () => {
@@ -37,6 +42,7 @@ function Creature() {
     let copiedCreature = new Creature();
     copiedCreature.size = this.size;
     copiedCreature.dna = this.dna.copy();
+    copiedCreature.colorCode = this.colorCode;
 
     return copiedCreature;
   }
@@ -68,17 +74,43 @@ function Creature() {
   }
 
   this.kill = () => {
+    this.flash();
     this.freeze();
     this.resetFitness();
     this.isAlive = false;
-    this.flash();
   }
 
   this.flash = () => {
     push();
     fill(this.colorCode);
     noStroke();
-    ellipse(this.position.x, this.position.y, 25);
+    ellipse(this.position.x, this.position.y, this.velocity.mag() * 5);
     pop();
   }
+
+  this.setMaxForce = (maxForce) => {
+    this.dna.setMaxForce(maxForce);
+  }
+
+  this.setColorCode = (colorCode) => {
+    this.colorCode = colorCode;
+  }
+
+  this.randomizeColor = () => {
+    return this.colorCode = color(
+      random(50, 205),
+      random(50, 205),
+      random(50, 205),
+      50
+    );
+  }
+}
+
+function getRandomColor() {
+  return this.colorCode = color(
+    random(50, 205),
+    random(50, 205),
+    random(50, 205),
+    50
+  );
 }

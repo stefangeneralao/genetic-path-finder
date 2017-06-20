@@ -1,10 +1,17 @@
 function Target(xpos, ypos) {
   this.position = createVector(xpos, ypos);
   this.size = 50;
+  this.colorCode = color(127, 30);
 
   this.show = () => {
     push();
-    fill(127);
+    if(darkTheme) {
+
+    }else{
+      fill(0, 10);
+      stroke(this.colorCode);
+    }
+    strokeWeight(2);
     ellipse(this.position.x, this.position.y, this.size);
     pop();
   }
@@ -21,5 +28,14 @@ function Target(xpos, ypos) {
     }else{
       return 0;
     }
+  }
+
+  this.setPosition = (xpos, ypos) => {
+    this.position.x = xpos;
+    this.position.y = ypos;
+  }
+
+  this.setSize = (size) => {
+    this.size = size;
   }
 }
