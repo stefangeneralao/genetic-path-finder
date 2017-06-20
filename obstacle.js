@@ -1,6 +1,7 @@
 function Obstacle(xpos, ypos, size) {
   this.position = createVector(xpos, ypos);
   this.size = size ? size : 100;
+  this.jitterRate = 1;
 
   this.setPosition = (xpos, ypos) => {
     this.position.x = xpos;
@@ -9,8 +10,13 @@ function Obstacle(xpos, ypos, size) {
 
   this.show = () => {
     push();
-    fill(255, 50);
-    stroke(0, 5);
+    if(darkTheme){
+      fill(0, 50);
+      stroke(255, 5);
+    }else{
+      fill(255, 50);
+      stroke(0, 5);
+    }
     strokeWeight(10);
     ellipse(this.position.x, this.position.y, this.size);
     pop();
@@ -37,5 +43,15 @@ function Obstacle(xpos, ypos, size) {
 
   this.setSize = (size) => {
     this.size = size;
+  }
+
+  this.setJitter = (jitterRate) => {
+    this.jitterRate = jitterRate;
+  }
+
+  this.move = () => {
+    const randomVector = p5.Vector.random2D();
+    randomVector.mult(this.jitterRate);
+    this.moveRelative(randomVector);
   }
 }
