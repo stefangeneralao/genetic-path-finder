@@ -75,7 +75,7 @@ createObstacles = () => {
       );
       newObstacle.setSize(width * 0.15);
       newObstacle.setJitter(2);
-      newObstacle.setBottomBorder(height * 0.8);
+      newObstacle.setBottomBorder(height * 0.9);
       tempObstaclesList.push(newObstacle);
     }
     return tempObstaclesList;
