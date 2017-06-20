@@ -57,7 +57,7 @@ function Obstacle(xpos, ypos, size) {
 
     // Check bottom border.
     if(!this.withinBottomBorder()) {
-      this.setPosition(this.position.x, this.bottomBorder);
+      this.setPosition(this.position.x, this.bottomBorder - this.size / 2);
     }
   }
 
@@ -72,7 +72,7 @@ function Obstacle(xpos, ypos, size) {
   this.withinBottomBorder = () => {
     const ypos = this.position.y;
     const halfSize = this.size / 2;
-    if(ypos < this.bottomBorder) {
+    if(ypos < this.bottomBorder - halfSize) {
       return true;
     }else{
       return false;
