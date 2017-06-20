@@ -3,10 +3,16 @@ function Population() {
   this.initialVelocity = createVector();
   this.creatures = [];
   this.mutationRate = 0.001;
+  this.maxForce = 1.0;
+  this.colorCode;
 
   this.insertCreature = (creature) => {
     creature.setPosition(this.spawnPoint.x, this.spawnPoint.y);
     creature.setVelocity(this.initialVelocity.x, this.initialVelocity.y);
+    creature.setMaxForce(this.maxForce);
+    if(this.colorCode) {
+      creature.setColorCode(this.colorCode);
+    }
     this.creatures.push(creature);
   }
 
@@ -65,13 +71,22 @@ function Population() {
       }
     });
 
-    console.log(bestCreature.fitness);
+    // Create fresh generation if no creatures survived.
+    if(!bestCreature.isAlive) {
+      for(let i in this.creatures) {
+        this.creatures[i] = bestCreature.copy();
+        this.creatures[i].mutateDNA(1.0);
+        this.creatures[i].randomizeColor();
+      }
 
     // Copy the best creature and mutate.
-    for(let i in this.creatures) {
-      this.creatures[i] = bestCreature.copy();
-      this.creatures[i].mutateDNA(this.mutationRate);
+    }else{
+      for(let i in this.creatures) {
+        this.creatures[i] = bestCreature.copy();
+        this.creatures[i].mutateDNA(this.mutationRate);
+      }
     }
+
   }
 
   this.setMutationRate = (mutationRate) => {
@@ -96,5 +111,13 @@ function Population() {
         }
       });
     });
+  }
+
+  this.setMaxForce = (maxForce) => {
+    this.maxForce = maxForce;
+  }
+
+  this.setColorCode = (colorCode) => {
+    this.colorCode = colorCode;
   }
 }
