@@ -1,5 +1,6 @@
 function DNA() {
   this.genes = [];
+  this.maxForce = 1.0;
 
   this.getInstructionAtIndex = (index) => {
     while(index >= this.genes.length) {
@@ -9,7 +10,7 @@ function DNA() {
   }
 
   this.addGene = () => {
-    let newGene = this.createNewGene();
+    const newGene = this.createNewGene();
     this.genes.push(newGene);
   }
 
@@ -23,7 +24,7 @@ function DNA() {
 
   this.createNewGene = () => {
     let newGene = p5.Vector.random2D();
-    newGene.mult(1);
+    newGene.mult(this.maxForce);
     return newGene;
   }
 
@@ -34,5 +35,9 @@ function DNA() {
     }
 
     return copiedDNA;
+  }
+
+  this.setMaxForce = (maxForce) => {
+    this.maxForce = maxForce;
   }
 }
