@@ -2,7 +2,7 @@ function Obstacle(xpos, ypos, size) {
   this.position = createVector(xpos, ypos);
   this.size = size ? size : 100;
   this.jitterRate = 1;
-  this.bottomBorder = 0;
+  this.bottomBorder = height;
 
   this.setPosition = (xpos, ypos) => {
     this.position.x = xpos;
