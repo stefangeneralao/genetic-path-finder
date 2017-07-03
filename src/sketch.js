@@ -3,13 +3,13 @@ let populations;
 let obstacles;
 let tick = 0;
 const generationLifespan = 100;
-let darkTheme = true;
+let darkTheme = false;
 
 // P5.setup function.
 setup = () => {
   createEnvironment();
-  createObstacles("PRESET_1");
-  createPopulations("PRESET_1");
+  createObstacles("PRESET_3");
+  createPopulations("PRESET_2");
   createTarget("PRESET_1");
 }
 
@@ -63,7 +63,7 @@ createEnvironment = () => {
 }
 
 // Create obstacles. Presets are provided as inner functions.
-createObstacles = () => {
+createObstacles = (presetSelect) => {
   // Preset1: Obstacles at random position within canvas.
   preset1 = () => {
     const tempObstaclesList = [];
@@ -74,7 +74,7 @@ createObstacles = () => {
         random(height * 0.2, height * 0.7)
       );
       newObstacle.setSize(width * 0.15);
-      newObstacle.setJitter(2);
+      newObstacle.setJitter(0.5);
       newObstacle.setBottomBorder(height * 0.9);
       tempObstaclesList.push(newObstacle);
     }
@@ -93,16 +93,51 @@ createObstacles = () => {
       );
       newObstacle.setSize(width * 0.1);
       newObstacle.setJitter(1.5);
+      newObstacle.setBottomBorder(height * 0.9);
       tempObstaclesList.push(newObstacle);
     }
     return tempObstaclesList;
   }
 
-  obstacles = preset1();
+  // Preset3: High number of obstacles, low jitter, small size.
+  preset3 = () => {
+    const tempObstaclesList = [];
+    const nrOfObstacles = 40;
+    for(let i = 0; i < nrOfObstacles; i++) {
+      let newObstacle = new Obstacle();
+      newObstacle.setPosition(
+        random(width * 0.1, width * 0.9),
+        random(height * 0.2, height * 0.7)
+      );
+      newObstacle.setSize(width * 0.05);
+      newObstacle.setJitter(0.75);
+      newObstacle.setBottomBorder(height * 0.9);
+      tempObstaclesList.push(newObstacle);
+    }
+    return tempObstaclesList;
+  }
+
+  // Preset selector.
+  switch(presetSelect) {
+    case 'PRESET_1':
+      obstacles = preset1();
+      break;
+
+    case 'PRESET_2':
+      obstacles = preset2();
+      break;
+
+    case 'PRESET_3':
+      obstacles = preset3();
+      break;
+
+    default:
+      obstacles = [];
+  }
 }
 
 // Create populations. Presets are provided as inner functions.
-createPopulations = () => {
+createPopulations = (presetSelect) => {
   // Creature preset 1.
   creaturePreset1 = () => {
     let defaultCreature = new Creature();
@@ -137,8 +172,26 @@ createPopulations = () => {
     return newPopulations;
   }
 
-  // Wrap up and return presets.
-  let newPopulations = populationsPreset2();
+  // Wrap up and set population.
+  let newPopulations;
+
+  // Select population preset.
+  switch(presetSelect) {
+    case 'PRESET_1':
+    newPopulations = populationsPreset1();
+    break;
+
+    case 'PRESET_2':
+    newPopulations = populationsPreset2();
+    break;
+
+    case 'PRESET_3':
+    newPopulations = populationsPreset3();
+    break;
+
+    default:
+    newPopulations = [];
+  }
   let defaultCreature = creaturePreset1;
   for(let i in newPopulations){
     for(let j = 0; j < 100; j++) {
@@ -147,6 +200,7 @@ createPopulations = () => {
   }
 
   populations = newPopulations;
+
 }
 
 createTarget = () => {
