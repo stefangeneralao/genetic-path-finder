@@ -8,6 +8,7 @@ function Creature() {
   this.colorCode = getRandomColor();
   this.isAlive = true;
 
+  // Shows the current position, heading and velocity magnitude.
   this.show = () => {
     push();
     noStroke();
@@ -18,56 +19,68 @@ function Creature() {
     pop();
   }
 
+  // Sets the visual size.
   this.setSize = (size) => {
     this.size = size;
   }
 
+  // Applies a force vector to velocity.
+  // Method does not effect the position.
   this.applyForce = (forceVector) => {
     this.velocity.add(forceVector);
   }
 
+  // Fetches instruction from dna and moves accordingly.
   this.moveAccordingToDNA = (index) => {
-    let dnaInstruction = this.dna.getInstructionAtIndex(index);
+    const dnaInstruction = this.dna.getInstructionAtIndex(index);
     this.applyForce(dnaInstruction);
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
   }
 
+  // Returns a copy of this object.
   this.copy = () => {
-    let copiedCreature = new Creature();
+    const copiedCreature = new Creature();
     copiedCreature.size = this.size;
     copiedCreature.dna = this.dna.copy();
     copiedCreature.colorCode = this.colorCode;
-
     return copiedCreature;
   }
 
+  // Mutates this dna.
   this.mutateDNA = (mutationRate) => {
     this.dna.mutate(mutationRate);
   }
 
+  // Returns distance to target.
   this.getDistanceToTarget = () => {
     return target.getDistance(this.position.x, this.position.y);
   }
 
+  // Sets this position.
   this.setPosition = (xpos, ypos) => {
     this.position.x = xpos;
     this.position.y = ypos;
   }
 
+  // Sets this velocity.
   this.setVelocity = (xvel, yvel) => {
     this.velocity.x = xvel;
     this.velocity.y = yvel;
   }
 
+  // Resets the velocity.
   this.freeze = () => {
     this.velocity = createVector();
   }
 
+  // Resets the fitness.
   this.resetFitness = () => {
     this.fitness = 0;
   }
 
+  // Resets velocity and fitness. Also calls a visual flash
+  // and sets isAlive variable to false.
   this.kill = () => {
     this.flash();
     this.freeze();
@@ -75,6 +88,7 @@ function Creature() {
     this.isAlive = false;
   }
 
+  // Displays a circle around the current position.
   this.flash = () => {
     push();
     fill(this.colorCode);
@@ -83,14 +97,17 @@ function Creature() {
     pop();
   }
 
+  // Sets max force.
   this.setMaxForce = (maxForce) => {
     this.dna.setMaxForce(maxForce);
   }
 
+  // Sets color code.
   this.setColorCode = (colorCode) => {
     this.colorCode = colorCode;
   }
 
+  // Randomize color.
   this.randomizeColor = () => {
     this.colorCode = getRandomColor();
   }
