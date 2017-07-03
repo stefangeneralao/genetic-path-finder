@@ -1,4 +1,5 @@
 function Population() {
+  // Constructor.
   this.spawnPoint = createVector();
   this.initialVelocity = createVector();
   this.creatures = [];
@@ -6,6 +7,9 @@ function Population() {
   this.maxForce = 1.0;
   this.colorCode;
 
+  // Pushes a creature to this.creatures.
+  // Forces the creature to set position to spawnpoint
+  // and reset velocity.
   this.insertCreature = (creature) => {
     creature.setPosition(this.spawnPoint.x, this.spawnPoint.y);
     creature.setVelocity(this.initialVelocity.x, this.initialVelocity.y);
@@ -16,17 +20,20 @@ function Population() {
     this.creatures.push(creature);
   }
 
+  // Shows every creature in this.creatures.
   this.show = () => {
     for(let i in this.creatures) {
       this.creatures[i].show();
     }
   }
 
+  // Sets spawnpoint of creatures.
   this.setSpawnPoint = (xpos, ypos) => {
     this.spawnPoint.x = xpos;
     this.spawnPoint.y = ypos;
   }
 
+  // Set initial velocity of creatures.
   this.setInitialVelocity = (xvel, yvel) => {
     this.initialVelocity.x = xvel;
     this.initialVelocity.y = yvel;
@@ -46,6 +53,7 @@ function Population() {
     });
   }
 
+  // Calculate and add fitness to every creature.
   this.giveFitness = () => {
     this.creatures.forEach((creature) => {
       if(creature.isAlive){
@@ -60,6 +68,7 @@ function Population() {
     });
   }
 
+  // Create and replaces the old generation with a new.
   this.createNewGeneration = () => {
     // Find best creature.
     let bestCreature = this.creatures[0];
@@ -89,10 +98,12 @@ function Population() {
 
   }
 
+  // Set mutationrate.
   this.setMutationRate = (mutationRate) => {
     this.mutationRate = mutationRate;
   }
 
+  // Set all creatures to spawnpoint.
   this.setAllCreaturesToSpawnPoint = () => {
     this.creatures.forEach((creature) => {
       creature.setPosition(this.spawnPoint.x, this.spawnPoint.y);
@@ -100,6 +111,7 @@ function Population() {
     });
   }
 
+  // Check if any creature has crashed into obstacle.
   this.checkObstacleCrash = (obstacles) => {
     this.creatures.forEach((creature) => {
       obstacles.forEach((obstacle) => {
@@ -113,10 +125,12 @@ function Population() {
     });
   }
 
+  // Set maxforce for the creatures.
   this.setMaxForce = (maxForce) => {
     this.maxForce = maxForce;
   }
 
+  // Set color code for the creatures.
   this.setColorCode = (colorCode) => {
     this.colorCode = colorCode;
   }
