@@ -134,4 +134,11 @@ function Population() {
   this.setColorCode = (colorCode) => {
     this.colorCode = colorCode;
   }
+
+  // Limit velocity for every creature.
+  this.limitVelocity = () => {
+    this.creatures.forEach((creature) => {
+      creature.limitVelocity();
+    })
+  }
 }

@@ -141,6 +141,7 @@ createPopulations = (presetSelect) => {
   // Creature preset 1.
   creaturePreset1 = () => {
     let defaultCreature = new Creature();
+    // defaultCreature.setMaxVelocity(3);
     return defaultCreature;
   }
 
@@ -192,15 +193,14 @@ createPopulations = (presetSelect) => {
     default:
     newPopulations = [];
   }
-  let defaultCreature = creaturePreset1;
-  for(let i in newPopulations){
+
+  for(let i in newPopulations) {
     for(let j = 0; j < 100; j++) {
-      newPopulations[i].insertCreature(defaultCreature());
+      newPopulations[i].insertCreature(creaturePreset1());
     }
   }
 
   populations = newPopulations;
-
 }
 
 createTarget = () => {
@@ -248,6 +248,13 @@ moveObstacles = () => {
 }
 
 movePopulation = () => {
+  // Function: Limit velocity on every creature.
+  limitVelocity = () => {
+    for(let i in populations) {
+      populations[i].limitVelocity();
+    }
+  }
+
   // Preset: Move according to dna.
   moveAccordingToDNA = () => {
     for(let i in populations) {
@@ -255,8 +262,10 @@ movePopulation = () => {
     }
   }
 
+
   // Preset selector.
   moveAccordingToDNA(tick);
+  limitVelocity();
 }
 
 fadeEnvironment = () => {

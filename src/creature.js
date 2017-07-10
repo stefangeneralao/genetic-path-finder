@@ -2,6 +2,7 @@ function Creature() {
   // Constructor.
   this.position = createVector(width * 0.5, height * 0.5);
   this.velocity = createVector();
+  this.maxVelocity = 0;
   this.size = 1;
   this.dna = new DNA();
   this.fitness = 0;
@@ -44,6 +45,7 @@ function Creature() {
     copiedCreature.size = this.size;
     copiedCreature.dna = this.dna.copy();
     copiedCreature.colorCode = this.colorCode;
+    copiedCreature.maxVelocity = this.maxVelocity;
     return copiedCreature;
   }
 
@@ -67,6 +69,15 @@ function Creature() {
   this.setVelocity = (xvel, yvel) => {
     this.velocity.x = xvel;
     this.velocity.y = yvel;
+  }
+
+  // Limits velocity.
+  this.limitVelocity = () => {
+    if(this.maxVelocity != 0) {
+      if(this.velocity.mag() > this.maxVelocity) {
+        this.velocity.setMag(this.maxVelocity);
+      }
+    }
   }
 
   // Resets the velocity.
@@ -99,7 +110,13 @@ function Creature() {
 
   // Sets max force.
   this.setMaxForce = (maxForce) => {
+    console.log(maxForce);
     this.dna.setMaxForce(maxForce);
+  }
+
+  // Sets max velocity.
+  this.setMaxVelocity = (maxVelocity) => {
+    this.maxVelocity = maxVelocity;
   }
 
   // Sets color code.
@@ -111,6 +128,7 @@ function Creature() {
   this.randomizeColor = () => {
     this.colorCode = getRandomColor();
   }
+
 }
 
 function getRandomColor() {

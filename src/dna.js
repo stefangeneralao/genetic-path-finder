@@ -34,6 +34,8 @@ function DNA() {
       copiedDNA.genes.push(this.genes[i]);
     }
 
+    copiedDNA.setMaxForce(this.maxForce);
+
     return copiedDNA;
   }
 
