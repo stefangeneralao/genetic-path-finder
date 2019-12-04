@@ -1,0 +1,14 @@
+{
+  "name": "genetic-path-finder",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/stefangeneralao/genetic-path-finder",
+  "author": "Stefan Generalao <stefan.generalao@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "scripts": {
+    "start": "node production_server"
+  }
+}
