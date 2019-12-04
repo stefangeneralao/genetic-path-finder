@@ -1,4 +1,4 @@
-function Creature() {
+function Creature(colorCode) {
   // Constructor.
   this.position = createVector(width * 0.5, height * 0.5);
   this.velocity = createVector();
@@ -6,7 +6,7 @@ function Creature() {
   this.size = 1;
   this.dna = new DNA();
   this.fitness = 0;
-  this.colorCode = getRandomColor();
+  this.colorCode = colorCode || getRandomColor();
   this.isAlive = true;
 
   // Shows the current position, heading and velocity magnitude.
@@ -110,7 +110,6 @@ function Creature() {
 
   // Sets max force.
   this.setMaxForce = (maxForce) => {
-    console.log(maxForce);
     this.dna.setMaxForce(maxForce);
   }
 

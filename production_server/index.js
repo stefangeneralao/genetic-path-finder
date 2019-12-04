@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 
-const port = 3003 || process.env.PORT;
+const port = process.env.PORT || 3003;
 const app = express();
 const buildPath = path.resolve(__dirname, '../build');
 

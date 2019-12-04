@@ -17,7 +17,6 @@ setup = () => {
 draw = () => {
   // Move and show every object.
   if(tick < generationLifespan) {
-    console.log("Move");
     showObstacles();
     showPopulations();
     showTarget();
@@ -28,19 +27,16 @@ draw = () => {
 
   // Freeze canvas before fading to reset.
   }else if(tick < generationLifespan + 10) {
-    console.log("Freeze");
     freezeEnvironment();
     tick++;
 
   // Fade canvas before reset.
   }else if(tick < generationLifespan + 30) {
-    console.log("Fade");
     fadeEnvironment();
     tick++;
 
   // Reset environment and create new generation.
   }else {
-    console.log("Reset");
     resetEnvironment();
     tick = 0;
   }
@@ -50,7 +46,6 @@ draw = () => {
 
 // Creating canvas, background, framerate etc.
 createEnvironment = () => {
-  console.log("Creating environment...");
   const fpsCap = 30;
   frameRate(fpsCap);
   createCanvas(windowWidth, windowHeight);
@@ -59,7 +54,6 @@ createEnvironment = () => {
   }else{
     background(235);
   }
-  console.log("fpsCap = " + fpsCap);
 }
 
 // Create obstacles. Presets are provided as inner functions.
@@ -109,7 +103,7 @@ createObstacles = (presetSelect) => {
         random(width * 0.1, width * 0.9),
         random(height * 0.2, height * 0.7)
       );
-      newObstacle.setSize(width * 0.05);
+      newObstacle.setSize(width * 0.06);
       newObstacle.setJitter(0.75);
       newObstacle.setBottomBorder(height * 0.9);
       tempObstaclesList.push(newObstacle);
@@ -163,12 +157,15 @@ createPopulations = (presetSelect) => {
     const newPopulations = [];
     newPopulations.push(new Population());
     newPopulations.push(new Population());
-    newPopulations[0].setSpawnPoint(width * 0.45, height * 0.95);
-    newPopulations[1].setSpawnPoint(width * 0.55, height * 0.95);
-    newPopulations[0].setMutationRate(0.03);
-    newPopulations[1].setMutationRate(0.03);
-    newPopulations[0].setMaxForce(1);
-    newPopulations[1].setMaxForce(1);
+    newPopulations.push(new Population());
+    for (let i = 0; i < newPopulations.length; i++) {
+      newPopulations[i].setSpawnPoint(width * 0.5, height * 0.95);
+      newPopulations[i].setMutationRate(0.03);
+      newPopulations[i].setMaxForce(1);
+    }
+    newPopulations[0].colorCode = color('#BE475020');
+    newPopulations[1].colorCode = color('#76A0AE20');
+    newPopulations[2].colorCode = color('#D1A44820');
 
     return newPopulations;
   }

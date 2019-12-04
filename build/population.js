@@ -1,11 +1,11 @@
-function Population() {
+function Population({ colorCode } = {}) {
   // Constructor.
   this.spawnPoint = createVector();
   this.initialVelocity = createVector();
   this.creatures = [];
   this.mutationRate = 0.001;
   this.maxForce = 1.0;
-  this.colorCode;
+  this.colorCode = colorCode;
 
   // Pushes a creature to this.creatures.
   // Forces the creature to set position to spawnpoint
@@ -85,7 +85,9 @@ function Population() {
       for(let i in this.creatures) {
         this.creatures[i] = bestCreature.copy();
         this.creatures[i].mutateDNA(1.0);
-        this.creatures[i].randomizeColor();
+        if (!this.colorCode) {
+          this.creatures[i].randomizeColor();
+        }
       }
 
     // Copy the best creature and mutate.
