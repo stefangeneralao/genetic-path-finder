@@ -9,6 +9,10 @@
     "express": "^4.17.1"
   },
   "scripts": {
-    "start": "node production_server"
+    "start": "node production_server",
+    "build-docker": "yarn && docker build -t genetic_path_finder .",
+    "run-docker": "docker run -p 3003:3003 -d --name genetic_path_finder genetic_path_finder",
+    "rm-docker": "docker stop genetic_path_finder && docker rm genetic_path_finder",
+    "update-docker": "./update_docker_image.sh"
   }
 }
